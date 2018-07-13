@@ -182,7 +182,7 @@ if [ "${CNI_CONF_NAME}" != "${CNI_OLD_CONF_NAME}" ]; then
     rm -f "/host/etc/cni/net.d/${CNI_OLD_CONF_NAME}"
 fi
 # Move the temporary CNI config into place.
-mv $TMP_CONF /host/etc/cni/net.d/${CNI_CONF_NAME}
+cp $TMP_CONF /host/etc/cni/net.d/${CNI_CONF_NAME}
 if [ "$?" != "0" ];
 then
   echo "Failed to mv files. This may be caused by selinux configuration on the host, or something else."
