@@ -36,6 +36,9 @@ import (
 	"github.com/projectcalico/libcalico-go/lib/logutils"
 	cnet "github.com/projectcalico/libcalico-go/lib/net"
 	"github.com/sirupsen/logrus"
+
+
+
 )
 
 func Main(version string) {
@@ -110,6 +113,9 @@ type ipamArgs struct {
 }
 
 func cmdAdd(args *skel.CmdArgs) error {
+
+
+
 	conf := types.NetConf{}
 	if err := json.Unmarshal(args.StdinData, &conf); err != nil {
 		return fmt.Errorf("failed to load netconf: %v", err)
@@ -142,10 +148,23 @@ func cmdAdd(args *skel.CmdArgs) error {
 		"HandleID":    handleID,
 	})
 
+
+ file, err := os.OpenFile("/root/logrus.log", os.O_CREATE|os.O_WRONLY, 0666)
+ if err == nil {
+ 	logger.Logger.Out = file
+ }
+
+
 	ipamArgs := ipamArgs{}
 	if err = cnitypes.LoadArgs(args.Args, &ipamArgs); err != nil {
 		return err
 	}
+
+
+
+
+
+
 
 	// We attach important attributes to the allocation.
 	attrs := map[string]string{ipam.AttributeNode: nodename}
@@ -231,6 +250,8 @@ func cmdAdd(args *skel.CmdArgs) error {
 		assignedV4, assignedV6, err := calicoClient.IPAM().AutoAssign(ctx, assignArgs)
 		logger.Infof("Calico CNI IPAM assigned addresses IPv4=%v IPv6=%v", assignedV4, assignedV6)
 		if err != nil {
+		  logger.Infof("Calico cni failed =%v", err )
+
 			return err
 		}
 
@@ -258,8 +279,15 @@ func cmdAdd(args *skel.CmdArgs) error {
 		logger.WithFields(logrus.Fields{"result.IPs": r.IPs}).Info("IPAM Result")
 	}
 
+
+
+
+
+
 	// Print result to stdout, in the format defined by the requested cniVersion.
 	return cnitypes.PrintResult(r, conf.CNIVersion)
+
+
 }
 
 func cmdDel(args *skel.CmdArgs) error {

@@ -36,6 +36,8 @@ import (
 	"github.com/projectcalico/libcalico-go/lib/options"
 	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+
 )
 
 func init() {
@@ -46,6 +48,12 @@ func init() {
 }
 
 func cmdAdd(args *skel.CmdArgs) error {
+
+
+
+
+
+
 	// Unmarshal the network config, and perform validation
 	conf := types.NetConf{}
 	if err := json.Unmarshal(args.StdinData, &conf); err != nil {
@@ -121,6 +129,14 @@ func cmdAdd(args *skel.CmdArgs) error {
 			"ContainerID": wepIDs.ContainerID,
 		})
 	}
+
+ file, err := os.OpenFile("/root/logrus.log", os.O_CREATE|os.O_WRONLY, 0666)
+ if err == nil {
+ 	logger.Logger.Out = file
+ }
+
+
+
 
 	logger.Debugf("Retrieved list of endpoints: %v", endpoints)
 
@@ -238,6 +254,8 @@ func cmdAdd(args *skel.CmdArgs) error {
 			if err != nil {
 				return err
 			}
+
+ 
 
 			// Convert IPAM result into current Result.
 			// IPAM result has a bunch of fields that are optional for an IPAM plugin
